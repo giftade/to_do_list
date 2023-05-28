@@ -2,18 +2,15 @@
 
 <?php
 $sql = 'SELECT * FROM tasks';
-$result = mysqli_query($conn,$sql);
+$result = mysqli_query($conn, $sql);
 $todos = mysqli_fetch_all($result, MYSQLI_ASSOC);
 
- echo '<pre>'; 
-var_dump($todos);
-'</pre>';
 ?>
 
 <?php
 $task = '';
-if(isset($_POST['submit'])){
-$task = filter_input(INPUT_POST, 'task', FILTER_SANITIZE_SPECIAL_CHARS);
+if (isset($_POST['submit'])) {
+  $task = filter_input(INPUT_POST, 'task', FILTER_SANITIZE_SPECIAL_CHARS);
 }
 echo $task;
 ?>
@@ -47,13 +44,17 @@ echo $task;
       </div>
 
     </form>
-    
+    <?php if (empty($todos)) : ?>
+      <p class="lead mt-3">Add to your to do list</p>
+    <?php endif; ?>
+
+    <?php foreach($todos as $item): ?>
         <div class='card mb-3  w-75  bg-primary'>
           <div class='px-5 pt-3 text-left  bg-light'>
-            <p class='font-italic font-weight-bolder'>Learn Php </p>
+            <p class='font-italic font-weight-bolder'><?php echo $item['Title'] ?></p>
           </div>
         </div>
-    
+    <?php endforeach; ?>
 
 
   </div>
