@@ -1,5 +1,9 @@
 <?php
-
+$task = '';
+if(isset($_POST['submit'])){
+$task = filter_input(INPUT_POST, 'task', FILTER_SANITIZE_SPECIAL_CHARS);
+}
+echo $task;
 ?>
 
 <!DOCTYPE html>
