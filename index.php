@@ -1,3 +1,4 @@
+<?php include '/my-php-code/to_do_list/config/database.php' ?>
 <?php
 $task = '';
 if(isset($_POST['submit'])){
