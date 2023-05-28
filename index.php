@@ -1,4 +1,15 @@
 <?php include '/my-php-code/to_do_list/config/database.php' ?>
+
+<?php
+$sql = 'SELECT * FROM tasks';
+$result = mysqli_query($conn,$sql);
+$todos = mysqli_fetch_all($result, MYSQLI_ASSOC);
+
+ echo '<pre>'; 
+var_dump($todos);
+'</pre>';
+?>
+
 <?php
 $task = '';
 if(isset($_POST['submit'])){
