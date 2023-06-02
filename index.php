@@ -2,11 +2,11 @@
 
 
 <?php
-//fetch from database
-$sql = 'SELECT * FROM tasks';
-$result = mysqli_query($conn, $sql);
-$todos = mysqli_fetch_all($result, MYSQLI_ASSOC);
-
+    //fetch from database
+    $statement = $pdo->prepare('SELECT * FROM tasks ORDER BY id DESC');
+    $statement->execute();
+    $todos = $statement->fetchAll(PDO::FETCH_ASSOC);
+ 
 ?>
 
 <?php
@@ -21,14 +21,13 @@ if (isset($_POST['submit'])) {
 
   //Adding to database
   if (empty($todoErr)) {
-    $sql = "INSERT INTO tasks(Title)
-    VALUES('$task')";
+    $statement = $pdo->prepare("INSERT INTO tasks (Title)
+               VALUES (:Title ) ");
 
-    if (mysqli_query($conn, $sql)) {
-      header('Location: index.php');
-    } else {
-      echo 'Error: ' . mysqli_error($conn);
-    }
+    $statement->bindValue(':Title', $task);
+    $statement->execute();
+
+    header('Location: index.php');
   }
 }
 
@@ -46,7 +45,7 @@ if (isset($_POST['submit'])) {
   <script src="./bootstrap-offline/js/jquery-3.6.0.js"></script>
   <script src="./bootstrap-offline/js/bootstrap.js"></script>
 
-  <title>Document</title>
+  <title>To do list</title>
 </head>
 
 <body>
@@ -56,7 +55,7 @@ if (isset($_POST['submit'])) {
     <form action="<?php echo htmlspecialchars($_SERVER['PHP_SELF'])  ?>" class="mt-4 d-flex flex-row w-75 justify-content-center" method="POST">
       <!-- Name input  -->
       <div class="mb-3 w-100">
-        <input type="text" maxlength="40" class="form-control px-5  w-100 <?php echo $todoErr ? 'is-invalid' : null; ?>" id="task" name="task" placeholder="What do you want to do today ?...">
+        <input type="text" maxlength="50" class="form-control px-5  w-100 <?php echo $todoErr ? 'is-invalid' : null; ?>" id="task" name="task" placeholder="What do you want to do today ?...">
         <div class="invalid-feedback">
           <?php echo $todoErr ?>
         </div>
@@ -75,15 +74,22 @@ if (isset($_POST['submit'])) {
       <div class='card mb-3  w-75  bg-primary'>
         <div class='px-5 pt-3 text-left  bg-light'>
           <div class="d-flex flex-row justify-content-between">
-            <p class='font-italic font-weight-bolder'><?php echo ucwords($item['Title'])  ?></p>
-            <p class='font-italic font-weight-bolder'><?php echo ucwords($item['date'])  ?></p>
+            <p class='font-italic font-weight-bold'><?php echo ucwords($item['Title'])  ?></p>
+            <p class='font-italic'><?php echo ucwords($item['date'])  ?></p>
+          </div>
+          <div class="mb-3">
+            <a href="update.php?id=<?php echo $item['id'] ?>" class="btn btn-sm btn-outline-primary">Edit</a>
+
+            <form method="post" action="delete.php" class="d-inline-block">
+              <input type="hidden" class="hidden" name='id' value="<?php echo $item['id'] ?>">
+              <button type="submit" class="btn btn-sm btn-outline-danger">Delete</button>
+            </form>
           </div>
         </div>
       </div>
     <?php endforeach; ?>
-
-
   </div>
+
 </body>
 
 

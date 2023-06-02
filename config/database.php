@@ -1,15 +1,12 @@
 <?php 
-define('DB_HOST', 'localhost');
-define('DB_USER', 'segun');
-define('DB_PASS', '123456');
-define('DB_NAME', 'todo_list');
 
-//create connection
-$conn = new mysqli(DB_HOST, DB_USER, DB_PASS, DB_NAME);
 
-//CHECK CONNECTION
-if($conn->connect_error){
-    die('Connection Failed ' . $conn->connect_error);
+
+try {
+    $pdo = new PDO('mysql:host=localhost;port=3306;dbname=todo_list', 'segun', '123456');
+ // set the PDO error mode to exception
+    $pdo->setAttribute(PDO::ATTR_ERRMODE, PDO::ERRMODE_EXCEPTION);
+} catch (PDOException $e) {
+    echo "Connection failed: " . $e->getMessage();
 }
-
 ?>
